@@ -1,15 +1,16 @@
-package com.example.mentalcalculation
+package com.example.mentalcalculation.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,8 +26,9 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculationApp() {
-    var userInputText by remember { mutableStateOf("0") }
-
+    var userInputText by remember { mutableStateOf("") }
+    var point by remember { mutableStateOf(0) }
+    var quiz = Quiz()
     Scaffold (
         topBar = {
             TopAppBar(title = {
@@ -42,11 +44,11 @@ fun CalculationApp() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "5 x 5 =",
+                text = quiz.getQuizString() + '=',
                 fontSize = 50.sp,
             )
             Text(
-                text = "25",
+                text = userInputText,
                 fontSize = 30.sp,
             )
             Row (
@@ -67,18 +69,26 @@ fun CalculationApp() {
                         modifier = keypadRowModifier,
                     ) {
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 1
+                            },
                         ) {
-                            Text(text = "1")
+                            Text(
+                                text = "1",
+                            )
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 2
+                            },
                             modifier = buttonModifier,
                         ) {
                             Text(text = "2")
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 3
+                            },
                         ) {
                             Text(text = "3")
                         }
@@ -87,18 +97,24 @@ fun CalculationApp() {
                         modifier = keypadRowModifier,
                     ) {
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 4
+                            },
                         ) {
                             Text(text = "4")
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 5
+                            },
                             modifier = buttonModifier,
                         ) {
                             Text(text = "5")
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 6
+                            },
                         ) {
                             Text(text = "6")
                         }
@@ -107,18 +123,24 @@ fun CalculationApp() {
                         modifier = keypadRowModifier,
                     ) {
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 7
+                            },
                         ) {
                             Text(text = "7")
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 8
+                            },
                             modifier = buttonModifier,
                         ) {
                             Text(text = "8")
                         }
                         Button(
-                            onClick = {},
+                            onClick = {
+                                userInputText += 9
+                            },
                         ) {
                             Text(text = "9")
                         }
@@ -126,21 +148,36 @@ fun CalculationApp() {
                     Row (
                         modifier = keypadRowModifier,
                     ) {
-                        Button(onClick = {}) {
+                        Button(onClick = {
+                            userInputText += 0
+                        }) {
                             Text(text = "0")
                         }
                     }
                 }
                 Column {
-                    Button(onClick = {}) {
+                    Button(onClick = {
+                        if(userInputText.length > 0) {
+                            userInputText = userInputText.substring(0, userInputText.length-1)
+                        }
+                    }) {
                         Text(text = "Delete")
                     }
-                    Button(onClick = {}) {
+                    Button(onClick = {
+                        userInputText = ""
+                    }) {
                         Text(text = "Clear")
                     }
-                    Button(onClick = {}) {
+                    Button(onClick = {
+                        if(quiz.verifyAnswer(userInputText.toInt())) {
+                            point += 1
+                            quiz = Quiz()
+                            userInputText = ""
+                        }
+                    }) {
                         Text(text = "Submit")
                     }
+                    Text(text = "point: $point")
                 }
             }
         }
