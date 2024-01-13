@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,7 +28,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CalculationApp() {
     var userInputText by remember { mutableStateOf("") }
-    var point by remember { mutableStateOf(0) }
+    var point by remember { mutableIntStateOf(0) }
     var quiz = Quiz()
     Scaffold (
         topBar = {
