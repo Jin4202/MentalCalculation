@@ -45,7 +45,7 @@ fun CalculationApp() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = quiz.getQuizString() + '=',
+                text = quiz.getQuizString() + " =",
                 fontSize = 50.sp,
             )
             Text(
