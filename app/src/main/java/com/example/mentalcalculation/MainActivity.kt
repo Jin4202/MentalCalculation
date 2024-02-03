@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.mentalcalculation.ui.CalculationApp
+import com.example.mentalcalculation.ui.LevelSelectionScreen
 import com.example.mentalcalculation.ui.theme.MentalCalculationTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MentalCalculationTheme {
-                CalculationApp()
+                LevelSelectionScreen()
             }
         }
     }
