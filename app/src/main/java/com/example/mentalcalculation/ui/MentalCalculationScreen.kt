@@ -25,13 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculationApp(
-    onNavigateToResult: () -> Unit
+    navController: NavController
 ) {
     var userInputText by remember { mutableStateOf("") }
     var point by remember { mutableIntStateOf(1000) }
@@ -206,18 +208,21 @@ fun CalculationApp(
 
                     Button(onClick = {
                         if(userInputText.isNotEmpty() && quiz.verifyAnswer(userInputText.toInt())) {
-                            quiz = Quiz()
                             quizLeft -= 1
-                            userInputText = ""
                             point += 100
+
+                            if(quizLeft < 1) {
+                                //Game end
+                                navController.navigate("result/$point")
+                            }
+
+                            quiz = Quiz()
+                            userInputText = ""
                             timer.cancel()
                             timer.start()
 
 
-                            if(quizLeft < 1) {
-                                //Game end
-                                onNavigateToResult.invoke()
-                            }
+
                         }
                     }) {
                         Text(text = "Submit")
@@ -232,5 +237,5 @@ fun CalculationApp(
 @Preview
 @Composable
 fun CalculationAppPreview() {
-    CalculationApp({})
+    CalculationApp(rememberNavController())
 }

@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mentalcalculation.ui.CalculationApp
 import com.example.mentalcalculation.ui.LevelSelectionScreen
 import com.example.mentalcalculation.ui.MainScreen
@@ -34,11 +36,15 @@ fun MentalCalculationApp() {
         composable("level") {LevelSelectionScreen(
             onNavigateToGame = { navController.navigate("game") },
         )}
-        composable("game") {CalculationApp(
-            onNavigateToResult = { navController.navigate("result") },
-        )}
-        composable("result") { ResultScreen(
-            onNavigateToMain = { navController.navigate("main") },
-        ) }
+        composable("game") { CalculationApp(navController) }
+        composable(
+            "result/{point}",
+            arguments = listOf(navArgument("point") { type = NavType.IntType })
+        ) {backStackEntry ->
+            ResultScreen(
+                onNavigateToMain = { navController.navigate("main")},
+                backStackEntry.arguments?.getInt("point")
+            )
+        }
     }
 }
