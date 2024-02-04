@@ -1,5 +1,6 @@
 package com.example.mentalcalculation.ui
 
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,13 +25,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalculationApp() {
+fun CalculationApp(
+    onNavigateToResult: () -> Unit
+) {
     var userInputText by remember { mutableStateOf("") }
-    var point by remember { mutableIntStateOf(0) }
+    var point by remember { mutableIntStateOf(1000) }
+
+    val timeLimit = 10
+
     var quiz = Quiz()
+    var quizLeft by remember { mutableIntStateOf(10) }
+    var timeLeft by remember {mutableStateOf("0.0")}
+    val timer by remember {
+        mutableStateOf(
+            object : CountDownTimer((timeLimit*1000).toLong(), 100) {
+                override fun onTick(millisUntilFinished: Long) {
+                    timeLeft = String.format("%d:%d", millisUntilFinished/1000, millisUntilFinished/100%10)
+                }
+                override fun onFinish() {
+                    timeLeft = "Time Over"
+                    point -= 100
+
+                }
+            }
+        )
+    }
+    LaunchedEffect(Unit) {
+        timer.start()
+        //Log.d("Refresh", "Timer started.")
+    }
+
     Scaffold (
         topBar = {
             TopAppBar(title = {
@@ -51,6 +81,10 @@ fun CalculationApp() {
             Text(
                 text = userInputText,
                 fontSize = 30.sp,
+            )
+            Text(
+                text = "Time Left: $timeLeft",
+                fontSize = 20.sp
             )
             Row (
                 modifier = Modifier
@@ -169,11 +203,21 @@ fun CalculationApp() {
                     }) {
                         Text(text = "Clear")
                     }
+
                     Button(onClick = {
-                        if(quiz.verifyAnswer(userInputText.toInt())) {
-                            point += 1
+                        if(userInputText.isNotEmpty() && quiz.verifyAnswer(userInputText.toInt())) {
                             quiz = Quiz()
+                            quizLeft -= 1
                             userInputText = ""
+                            point += 100
+                            timer.cancel()
+                            timer.start()
+
+
+                            if(quizLeft < 1) {
+                                //Game end
+                                onNavigateToResult.invoke()
+                            }
                         }
                     }) {
                         Text(text = "Submit")
@@ -188,5 +232,5 @@ fun CalculationApp() {
 @Preview
 @Composable
 fun CalculationAppPreview() {
-    CalculationApp()
+    CalculationApp({})
 }

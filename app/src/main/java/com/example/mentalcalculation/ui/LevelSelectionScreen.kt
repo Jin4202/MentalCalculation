@@ -28,13 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.mentalcalculation.data.LevelState
 import com.example.mentalcalculation.data.Operator
 import com.example.mentalcalculation.ui.theme.PurpleGrey40
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LevelSelectionScreen() {
+fun LevelSelectionScreen(
+    onNavigateToGame: () -> Unit
+) {
     val bColorBase = Color(130,109,140)
     val bColorHighlighted = Color(179,136,255)
 
@@ -190,6 +194,7 @@ fun LevelSelectionScreen() {
                 Text(text = "Point Multiplier: " + "x 1")
                 Button(onClick = {
                     var levelState = LevelState(listOf(isPlusSelected, isMinusSelected, isMultiplicationSelected, isDivisionSelected), numberLevel, timeLevel)
+                    onNavigateToGame()
                     //Log.d("Quiz Setting: ", ""+levelState)
                 }) {
                     Text(text = "Start the Quiz")
@@ -228,5 +233,5 @@ fun LevelSelectionScreen() {
 @Preview
 @Composable
 fun LevelSelectionScreenPreview() {
-    LevelSelectionScreen()
+    LevelSelectionScreen({})
 }
