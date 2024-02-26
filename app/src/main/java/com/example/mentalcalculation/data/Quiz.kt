@@ -1,14 +1,11 @@
-package com.example.mentalcalculation.ui
+package com.example.mentalcalculation.data
 
-import com.example.mentalcalculation.data.Operator
 import kotlin.random.Random
-import kotlin.random.nextInt
 
-class Quiz(val x: Int = Random.nextInt(0, 99), val y: Int = Random.nextInt(0, 99)) {
-    var op : Operator = Operator.PLUS
+class Quiz(val x: Int = Random.nextInt(0, 99), val y: Int = Random.nextInt(1, 99),  var op : Operator = Operator.PLUS) {
 
     fun verifyAnswer(answer : Int): Boolean {
-        var correctAns : Int
+        val correctAns : Int
         when(op) {
             Operator.PLUS -> correctAns = x+y
             Operator.MINUS -> correctAns = x-y

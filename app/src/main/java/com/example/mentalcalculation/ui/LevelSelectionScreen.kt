@@ -28,16 +28,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mentalcalculation.data.LevelState
 import com.example.mentalcalculation.data.Operator
 import com.example.mentalcalculation.ui.theme.PurpleGrey40
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LevelSelectionScreen(
-    onNavigateToGame: () -> Unit
+    navController: NavController
 ) {
     val bColorBase = Color(130,109,140)
     val bColorHighlighted = Color(179,136,255)
@@ -193,39 +196,15 @@ fun LevelSelectionScreen(
             Column {
                 Text(text = "Point Multiplier: " + "x 1")
                 Button(onClick = {
-                    var levelState = LevelState(listOf(isPlusSelected, isMinusSelected, isMultiplicationSelected, isDivisionSelected), numberLevel, timeLevel)
-                    onNavigateToGame()
-                    //Log.d("Quiz Setting: ", ""+levelState)
+                    val levelState = LevelState(listOf(isPlusSelected, isMinusSelected, isMultiplicationSelected, isDivisionSelected), numberLevel, timeLevel)
+                    Log.d("Quiz Setting: ", ""+levelState)
+                    val stateArg: String = Json.encodeToString(levelState)
+                    Log.d("Quiz Arg: ", ""+stateArg)
+                    navController.navigate("game/$stateArg")
                 }) {
                     Text(text = "Start the Quiz")
                 }
             }
-            /*
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Box(modifier = Modifier.fillMaxWidth(0.3f)) {
-                    Text(
-                        text = ""
-                    )
-                }
-
-                Button(
-                    onClick = { /*TODO*/ }
-
-                ) {
-                    Text(text = "Start the quiz")
-                }
-
-                Box(modifier = Modifier.fillMaxWidth(0.3f)) {
-                    Text(
-                        text = "x 1"
-                    )
-                }
-            }
-             */
         }
     }
 }
@@ -233,5 +212,5 @@ fun LevelSelectionScreen(
 @Preview
 @Composable
 fun LevelSelectionScreenPreview() {
-    LevelSelectionScreen({})
+    LevelSelectionScreen(rememberNavController())
 }

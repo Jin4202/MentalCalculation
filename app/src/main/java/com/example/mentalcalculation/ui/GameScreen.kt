@@ -1,13 +1,11 @@
 package com.example.mentalcalculation.ui
 
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -27,20 +25,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.delay
-import java.util.concurrent.TimeUnit
+import com.example.mentalcalculation.data.LevelState
+import com.example.mentalcalculation.data.Quiz
+import kotlinx.serialization.json.Json
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalculationApp(
-    navController: NavController
+fun GameScreen(
+    navController: NavController,
+    state: String?
 ) {
+    val levelState = state!!.let { Json.decodeFromString<LevelState>(it) }
     var userInputText by remember { mutableStateOf("") }
     var point by remember { mutableIntStateOf(1000) }
 
-    val timeLimit = 10
+    val numLevel = levelState.numberLevel
+    val timeLimit = levelState.timeLevel
+    fun createQuiz(): Quiz {
+        return Quiz(Random.nextInt(0, numLevel), Random.nextInt(1, numLevel), levelState.pickOperator())
+    }
 
-    var quiz = Quiz()
+    var quiz = createQuiz()
     var quizLeft by remember { mutableIntStateOf(10) }
     var timeLeft by remember {mutableStateOf("0.0")}
     val timer by remember {
@@ -216,13 +222,10 @@ fun CalculationApp(
                                 navController.navigate("result/$point")
                             }
 
-                            quiz = Quiz()
+                            quiz = createQuiz()
                             userInputText = ""
                             timer.cancel()
                             timer.start()
-
-
-
                         }
                     }) {
                         Text(text = "Submit")
@@ -236,6 +239,6 @@ fun CalculationApp(
 
 @Preview
 @Composable
-fun CalculationAppPreview() {
-    CalculationApp(rememberNavController())
+fun GameScreenPreview() {
+    GameScreen(rememberNavController(), "")
 }
