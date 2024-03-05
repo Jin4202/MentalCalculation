@@ -9,11 +9,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.mentalcalculation.ui.GameScreen
-import com.example.mentalcalculation.ui.LevelSelectionScreen
+import com.example.mentalcalculation.ui.practice.GameScreen
+import com.example.mentalcalculation.ui.practice.LevelSelectionScreen
 import com.example.mentalcalculation.ui.MainScreen
-import com.example.mentalcalculation.ui.ResultScreen
+import com.example.mentalcalculation.ui.practice.ResultScreen
 import com.example.mentalcalculation.ui.theme.MentalCalculationTheme
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

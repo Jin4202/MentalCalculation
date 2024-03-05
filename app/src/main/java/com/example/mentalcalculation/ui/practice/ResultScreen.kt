@@ -1,4 +1,4 @@
-package com.example.mentalcalculation.ui
+package com.example.mentalcalculation.ui.practice
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.example.mentalcalculation.ui
+package com.example.mentalcalculation.ui.practice
 
 import android.os.CountDownTimer
 import androidx.compose.foundation.layout.Arrangement
@@ -37,18 +37,13 @@ fun GameScreen(
     state: String?
 ) {
     val levelState = state!!.let { Json.decodeFromString<LevelState>(it) }
+    val timeLimit = levelState.timeLevel
+
     var userInputText by remember { mutableStateOf("") }
     var point by remember { mutableIntStateOf(1000) }
-
-    val numLevel = levelState.numberLevel
-    val timeLimit = levelState.timeLevel
-    fun createQuiz(): Quiz {
-        return Quiz(Random.nextInt(0, numLevel), Random.nextInt(1, numLevel), levelState.pickOperator())
-    }
-
-    var quiz = createQuiz()
     var quizLeft by remember { mutableIntStateOf(10) }
     var timeLeft by remember {mutableStateOf("0.0")}
+
     val timer by remember {
         mutableStateOf(
             object : CountDownTimer((timeLimit*1000).toLong(), 100) {
@@ -63,6 +58,9 @@ fun GameScreen(
             }
         )
     }
+
+    var quiz = Quiz(levelState)
+
     LaunchedEffect(Unit) {
         timer.start()
         //Log.d("Refresh", "Timer started.")
@@ -200,7 +198,7 @@ fun GameScreen(
                 }
                 Column {
                     Button(onClick = {
-                        if(userInputText.length > 0) {
+                        if(userInputText.isNotEmpty()) {
                             userInputText = userInputText.substring(0, userInputText.length-1)
                         }
                     }) {
@@ -222,7 +220,7 @@ fun GameScreen(
                                 navController.navigate("result/$point")
                             }
 
-                            quiz = createQuiz()
+                            quiz = Quiz(levelState)
                             userInputText = ""
                             timer.cancel()
                             timer.start()
